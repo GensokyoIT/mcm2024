@@ -1,0 +1,10 @@
+*
+!*/
+#only source files
+!*.tex
+!*.c
+!*.cpp
+!*.txt
+!*.py
+!*.m
+!.gitignore
