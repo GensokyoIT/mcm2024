@@ -15,8 +15,8 @@ def dyComptition(vars, t, alpha, beta):  # 2物种LK模型，导数函数
     # here N1 is lamprey, N2 is others
     N1, N2 = vars
     # alpha, beta = args
-    dN1 = r1 * (1 -(N1+alpha*N2)/K1)
-    dN2 = r2 * (1 -(N2+beta*N1)/K2)
+    dN1 = r1 *N1* (1 -(N1+alpha*N2)/K1)
+    dN2 = r2 *N2* (1 -(N2+beta*N1)/K2)
     # odeint solver requires an array of derivatives as return value
     return np.array([dN1, dN2])
 
