@@ -5,25 +5,18 @@ matplotlib.use('TKAgg')
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Generate random fish lengths (replace this with your actual array)
-a = np.random.rand(1000)
-
-# Create a histogram with manually normalized frequencies
-counts, bins, _ = plt.hist(a, bins=np.linspace(0, 1, 101), edgecolor='black', density=False)
-
-# Normalize counts to get relative frequencies
-relative_frequencies = counts / sum(counts)
-
-# Create a new figure for the plot
-plt.figure()
-
-# Plot the normalized histogram
-plt.bar(bins[:-1], relative_frequencies, width=0.01, edgecolor='black')
-
+# Energy needed by a single fish
+x = np.linspace(0,20,101)
+y= 0.12+x
 # Set labels and title
-plt.title('Fish Length Distribution (Relative Frequencies)')
-plt.xlabel('Fish Length')
-plt.ylabel('Relative Frequency')
+plt.plot(x,y)
+plt.xlabel('PERCENT FEMALES')
+plt.ylabel('Energy needed')
+# disable display of y range
+# turn off y axes 
 
+plt.ylim(0,1.2)
+plt.yticks([])
+plt.xlim(0,1)
 # Show the plot
 plt.show()
