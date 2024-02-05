@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt 
 matplotlib.use('TKAgg')
-
 tEnd = 2016-1954  
 nNodes = 100000 
 deltaT = tEnd / nNodes  
@@ -11,7 +10,6 @@ deltaT = tEnd / nNodes
 # here number #1 means Lamprey, #2 means others
 # alpha is 2 to 1, that is impact of others on lamprey
 # beta is 1 to 2, that is impact of lamprey on others
-#
 # K1, K2 will be affected by the environment, (i.e.) in relationship with N1, N2
 # we provide the initial maximum value: K1_Init, K2_Init
 # here we treat only r1 and r2 as constants
@@ -21,7 +19,6 @@ K1_Init = 50
 K2_Init = 50
 alpha, beta = 0.1, 0.5
 sex_factor = 1
-# 初值
 N1_init, N2_init = 10, 40 
 # decay rate of K1 and K2
 N1_decay = 0.02
@@ -31,10 +28,8 @@ K2 = np.linspace(30,50,nNodes) + np.random.normal(0,3,nNodes)
 t = np.linspace(0,tEnd,nNodes)  # (start,stop,step)
 N1 = np.zeros(nNodes)
 N2 = np.zeros(nNodes)
-
 N1[0] = N1_init
 N2[0] = N2_init
-
 # ratio of sex of lamprey
 # interpolation of Rf from sample in collection of data in journal
 # manual input from a sample (percent males of Lake Superior, 1946-2016) 
@@ -54,7 +49,6 @@ Rf_Fm_sample = 1-np.array(
      32,33,34.3,30.9,39.1,44.1,45,56,54.2,33,34,59,42,
      47,53,54.5,56.5,57.2,54.5,53.2,66,65.8,65,62.5,61,
      54.5,63.9,51,51])/100
-
 Rf_interp = interp1d(Rf_t_sample, Rf_Fm_sample, kind='cubic')
 Rf = Rf_interp(t)
 dRfdt = np.gradient(Rf, deltaT)
@@ -72,7 +66,6 @@ for i in range(nNodes):
     if(i != nNodes-1):
         N1[i+1] = N1[i] + dN1 * deltaT
         N2[i+1] = N2[i] + dN2 * deltaT
-#
 fig, axs = plt.subplots(3)
 # set a medium size of the plot
 fig.set_size_inches(15, 8)
@@ -88,7 +81,6 @@ axs[0].legend(loc='best')
 axs[1].set_title("2. Sexrate of Lamprey(percentage of female) vs time")
 axs[1].plot(t+1954,Rf,label="Rf")
 axs[1].legend(loc='best')
-
 axs[2].set_title("3. dRf/dt vs time")
 axs[2].plot(t+1954,dRfdt,label="dRfdt")
 axs[2].legend(loc='best')

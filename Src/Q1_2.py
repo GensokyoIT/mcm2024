@@ -17,10 +17,8 @@ deltaT = tEnd / nNodes
 r = 0.5
 alpha, beta = 2, 0.3
 delta = 0.05
-# 初值
 N1_init, N0_init = 10, 40 
 sex_factor = 0
-
 t = np.linspace(0,tEnd,nNodes)  # (start,stop,step)
 N1 = np.zeros(nNodes)
 N0 = np.zeros(nNodes)
@@ -28,7 +26,6 @@ N0 = np.zeros(nNodes)
 Rf = np.zeros(nNodes)
 N1[0] = N1_init
 N0[0] = N0_init
-
 # interpolation of Rf from sample in collection of data in journal
 # manual input from a sample (percent males of Lake Superior, 1946-2016) 
 # from 10.1016/j.jglr.2021.09.015 and 10.1016/S0380-1330(91)71363-4
@@ -47,7 +44,6 @@ Rf_Fm_sample = 1-np.array([
     32,33,34.3,30.9,39.1,44.1,45,56,54.2,33,34,59,42,
     47,53,54.5,56.5,57.2,54.5,53.2,66,65.8,65,62.5,61,
     54.5,63.9,51,51])/100
-
 Rf_interp = interp1d(Rf_t_sample, Rf_Fm_sample, kind='cubic')
 Rf = Rf_interp(t)
 dRfdt = np.gradient(Rf, deltaT)
@@ -55,32 +51,27 @@ dRfdt = np.gradient(Rf, deltaT)
 for i in range(nNodes):
     # for K1_tmp, we can either sample data from an article 
     # or just use a single linear decreasing model w.r.t N1 and N0
-    
-    #dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N0[i])/K1_tmp)
+    # dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N0[i])/K1_tmp)
     # now sex rate is added to the model for N1(lamprey)
     dN0 = alpha*N0[i] - beta*N0[i]*N1[i]
     dN1 = delta*N0[i]*N1[i] -r*N1[i] -sex_factor*abs(dRfdt[i])*N1[i]
     if(i != nNodes-1):
         N1[i+1] = N1[i] + dN1 * deltaT
         N0[i+1] = N0[i] + dN0 * deltaT
-#
 fig, axs = plt.subplots(3)
 # set a medium size of the plot
 fig.set_size_inches(15, 8)
 # set a title of the plot
-axs[0].set_title("Q3. lamprey and prey\nalpha=%.2f,beta=%.2f"
-                 ",delta=%.2f,r=%.2f,sex_factor=%.2f"%(alpha,beta,delta,r,sex_factor))
+axs[0].set_title("Q3. lamprey and prey\nalpha=%.2f,beta=%.2f,delta=%.2f,r=%.2f,sex_factor=%.2f"%(alpha,beta,delta,r,sex_factor))
 axs[0].set_xlabel('t')
 axs[0].plot(t+1954, N1, label="N1(Lamprey)")
 axs[0].plot(t+1954, N0, label="N0(prey)")
 axs[0].legend(loc='best')
 axs[0].set_xlabel('t')
 axs[0].set_ylabel('N')
-
 axs[1].set_title("2. Sexrate of Lamprey(percentage of female) vs time")
 axs[1].plot(t+1954,Rf,label="Rf")
 axs[1].legend(loc='best')
-
 axs[2].set_title("3. dRf/dt vs time")
 axs[2].plot(t+1954,dRfdt,label="dRfdt")
 axs[2].legend(loc='best')
