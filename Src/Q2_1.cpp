@@ -21,7 +21,6 @@ int main() {
 
 	default_random_engine eng(time(0));
 	uniform_real_distribution<double> uni(0.0, 1.0);
-    cout<<uni(eng)<<endl;
 	for (int i = 1; i <= MAX; i++) {
 		female[i] = uni(eng);
 		male[i] = uni(eng);
