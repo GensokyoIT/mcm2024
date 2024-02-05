@@ -1,42 +1,84 @@
 from scipy.integrate import odeint  # 导入 scipy.integrate 模块
+from scipy.interpolate import interp1d
 import numpy as np  # 导入 numpy包
 import matplotlib
 import matplotlib.pyplot as plt  # 导入 matplotlib包
+# 别用Qt5, my conda env is not compatible with it
 matplotlib.use('TKAgg')
-# here number #1 means Lamprey, #2 means others
-r1 = 1
-r2 = 0.1
-K1 = 50
-K2 = 50
-
-def dyComptition(vars, t, alpha, beta):  # 2物种LK模型，导数函数
-    # import global constants
-    global r1,r2
-    # here N1 is lamprey, N2 is others
-    N1, N2 = vars
-    # alpha, beta = args
-    dN1 = r1 *N1* (1 -(N1+alpha*N2)/K1)
-    dN2 = r2 *N2* (1 -(N2+beta*N1)/K2)
-    # odeint solver requires an array of derivatives as return value
-    return np.array([dN1, dN2])
-
 # 设置模型参数
+tEnd = 2016-1954  # 预测长度(63 years, 1954-2016)
+nNodes = 100000 #采样点数
+deltaT = tEnd / nNodes  # 采样间隔
+# brief: 
+# here number #1 means Lamprey, #2 means others
 # alpha is 2 to 1, that is impact of others on lamprey
 # beta is 1 to 2, that is impact of lamprey on others
-alfa, beta = 0.1, 0.5
-tEnd = 1000  # 预测长度
-t = np.arange(0.0, tEnd, 0.01)  # (start,stop,step)
+#
+# K1, K2 will be affected by the environment, (i.e.) in relationship with N1, N2
+# we provide the initial maximum value: K1_Init, K2_Init
+# here we treat only r1 and r2 as constants
+r1 = 2
+r2 = 0.5
+K1_Init = 50
+K2_Init = 50
+alpha, beta = 0.1, 1
+sex_factor = 0
 # 初值
-N1_init, N2_init = 10, 10  
-Y0 = (N1_init, N2_init) 
+N1_init, N2_init = 10, 40 
+# decay rate of K1 and K2
+N1_decay = 0.02
+N2_decay = 0.02
 
-plt.figure(figsize=(9,6))
+t = np.linspace(0,tEnd,nNodes)  # (start,stop,step)
+N1 = np.zeros(nNodes)
+N2 = np.zeros(nNodes)
+# ratio of sex of lamprey
+Rf = np.zeros(nNodes)
+N1[0] = N1_init
+N2[0] = N2_init
+
+# interpolation of Rf from sample in collection of data in journal
+# manual input from a sample (percent males of Lake Superior, 1946-2016) 
+# from 10.1016/j.jglr.2021.09.015 and 10.1016/S0380-1330(91)71363-4
+# the base is 1956
+Rf_t_sample = np.array([1954,1955,1956,1957,1958,1959,1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016])-1954
+# convert male rate to female rate
+Rf_Fm_sample = 1-np.array([50,58,54,57,57.5,58,59,69.5,69,70,67.2,55,52,41.5,33,33,27,37,30.5,30.5,30,30.5,29,30,30.3,34.5,53,32,33,34.3,30.9,39.1,44.1,45,56,54.2,33,34,59,42,47,53,54.5,56.5,57.2,54.5,53.2,66,65.8,65,62.5,61,54.5,63.9,51,51])/100
+
+Rf_interp = interp1d(Rf_t_sample, Rf_Fm_sample, kind='cubic')
+Rf = Rf_interp(t)
+dRfdt = np.gradient(Rf, deltaT)
+# nNodes-1 to prevent boundary error in N1 and N2
+for i in range(nNodes):
+    # for K1_tmp, we can either sample data from an article 
+    # or just use a single linear decreasing model w.r.t N1 and N2
+    K1_tmp = K1_Init - N1_decay * N1[i] - N2_decay * N2[i] 
+    K2_tmp = K2_Init - N1_decay * N1[i] - N2_decay * N2[i] 
+    #dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp)
+    # now sex rate is added to the model for N1(lamprey)
+    dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp - sex_factor*Rf[i])
+    
+    dN2 = r2 *N2[i]* (1 -(N2[i]+beta*N1[i])/K2_tmp)
+    if(i != nNodes-1):
+        N1[i+1] = N1[i] + dN1 * deltaT
+        N2[i+1] = N2[i] + dN2 * deltaT
+#
+fig, axs = plt.subplots(3)
+# set a medium size of the plot
+fig.set_size_inches(15, 8)
 # set a title of the plot
-plt.title("1. lamprey and others competition\nr1=%.2f,r2=%.2f,K1=%.2f,K2=%.2f,alpha=%.2f,beta=%.2f"%(r1,r2,K1,K2,alfa,beta))
-# plt.subplot(121), 
-yt = odeint(dyComptition, Y0, t, args=(alfa, beta))  # SIS 模型
-plt.plot(t, yt[:,0], label="N1(Lamprey)")
-plt.plot(t, yt[:,1], label="N2(Others)")
-plt.xlabel('t')
-plt.legend(loc='best')
+axs[0].set_title("1. lamprey and others competition\nr1=%.2f,r2=%.2f\nK1_Init=%.2f,K2_Init=%.2f,alpha=%.2f,beta=%.2f\n N1_decay=%.2f,N2_decay=%.2f,sex_factor=%.2f"%(r1,r2,K1_Init,K2_Init,alpha,beta,N1_decay,N2_decay,sex_factor))
+axs[0].set_xlabel('t')
+axs[0].plot(t+1954, N1, label="N1(Lamprey)")
+axs[0].plot(t+1954, N2, label="N2(Others)")
+# axs[0].xlabel('t')
+# plt.legend(loc='best')
+# plt.show()
+axs[1].set_title("2. Sexrate of Lamprey(percentage of female) vs time")
+axs[1].plot(t+1954,Rf,label="Rf")
+axs[1].legend(loc='best')
+
+axs[2].set_title("3. dRf/dt vs time")
+axs[2].plot(t+1954,dRfdt,label="dRfdt")
+axs[2].legend(loc='best')
 plt.show()
