@@ -14,27 +14,25 @@ deltaT = tEnd / nNodes  # 采样间隔
 # alpha is 2 to 1, that is impact of others on lamprey
 # beta is 1 to 2, that is impact of lamprey on others
 #
-# K1, K2 will be affected by the environment, (i.e.) in relationship with N1, N2
+# K1, K2 will be affected by the environment, (i.e.) in relationship with N1, N0
 # we provide the initial maximum value: K1_Init, K2_Init
 # here we treat only r1 and r2 as constants
-r1 = 20
-r2 = 5
-K1_Init = 50
-K2_Init = 50
+r = 0.5
 alpha, beta = 0.1, 1
+delta = 0.6
 # 初值
-N1_init, N2_init = 10, 40 
+N1_init, N0_init = 10, 40 
 # decay rate of K1 and K2
 N1_decay = 0.02
-N2_decay = 0.02
+N0_decay = 0.02
 
 t = np.linspace(0,tEnd,nNodes)  # (start,stop,step)
 N1 = np.zeros(nNodes)
-N2 = np.zeros(nNodes)
+N0 = np.zeros(nNodes)
 # ratio of sex of lamprey
 Rf = np.zeros(nNodes)
 N1[0] = N1_init
-N2[0] = N2_init
+N0[0] = N0_init
 
 # interpolation of Rf from sample in collection of data in journal
 # manual input from a sample (percent males of Lake Superior, 1946-2016) 
@@ -44,32 +42,30 @@ Rf_t_sample = np.array([1954,1955,1956,1957,1958,1959,1960,1961,1962,1963,1964,1
 # convert male rate to female rate
 Rf_Fm_sample = 1-np.array([50,58,54,57,57.5,58,59,69.5,69,70,67.2,55,52,41.5,33,33,27,37,30.5,30.5,30,30.5,29,30,30.3,34.5,53,32,33,34.3,30.9,39.1,44.1,45,56,54.2,33,34,59,42,47,53,54.5,56.5,57.2,54.5,53.2,66,65.8,65,62.5,61,54.5,63.9,51,51])/100
 
-Rf_interp = interp1d(Rf_t_sample, Rf_Fm_sample, kind='cubic')
+Rf_interp = interp1d(Rf_t_sample, Rf_Fm_sample)
 Rf = Rf_interp(t)
 dRfdt = np.gradient(Rf, deltaT)
-# nNodes-1 to prevent boundary error in N1 and N2
+# nNodes-1 to prevent boundary error in N1 and N0
 for i in range(nNodes):
     # for K1_tmp, we can either sample data from an article 
-    # or just use a single linear decreasing model w.r.t N1 and N2
-    K1_tmp = K1_Init - N1_decay * N1[i] - N2_decay * N2[i] 
-    K2_tmp = K2_Init - N1_decay * N1[i] - N2_decay * N2[i] 
-    #dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp)
-    # now sex rate is added to the model for N1(lamprey)
-    dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp - 0.5*Rf[i])
+    # or just use a single linear decreasing model w.r.t N1 and N0
     
-    dN2 = r2 *N2[i]* (1 -(N2[i]+beta*N1[i])/K2_tmp)
+    #dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N0[i])/K1_tmp)
+    # now sex rate is added to the model for N1(lamprey)
+    dN0 = alpha*N0[i] - beta*N0[i]*N1[i]
+    dN1 = delta*N0[i]*N1[i] -r*N1[i] -abs(Rf[i])*N1[i]
     if(i != nNodes-1):
         N1[i+1] = N1[i] + dN1 * deltaT
-        N2[i+1] = N2[i] + dN2 * deltaT
+        N0[i+1] = N0[i] + dN0 * deltaT
 #
 fig, axs = plt.subplots(3)
 # set a medium size of the plot
 fig.set_size_inches(15, 8)
 # set a title of the plot
-axs[0].set_title("1. lamprey and others competition\nr1=%.2f,r2=%.2f\nK1_Init=%.2f,K2_Init=%.2f,alpha=%.2f,beta=%.2f\n N1_decay=%.2f,N2_decay=%.2f"%(r1,r2,K1_Init,K2_Init,alpha,beta,N1_decay,N2_decay))
+axs[0].set_title("Q3. lamprey and prey\nalpha=%.2f,beta=%.2f,delta=%.2f,r=%.2f"%(alpha,beta,delta,r))
 axs[0].set_xlabel('t')
 axs[0].plot(t+1954, N1, label="N1(Lamprey)")
-axs[0].plot(t+1954, N2, label="N2(Others)")
+axs[0].plot(t+1954, N0, label="N0(prey)")
 # axs[0].xlabel('t')
 # plt.legend(loc='best')
 # plt.show()

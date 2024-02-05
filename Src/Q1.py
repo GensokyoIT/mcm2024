@@ -32,11 +32,11 @@ N2_decay = 0.02
 t = np.linspace(0,tEnd,nNodes)  # (start,stop,step)
 N1 = np.zeros(nNodes)
 N2 = np.zeros(nNodes)
-# ratio of sex of lamprey
-Rf = np.zeros(nNodes)
+
 N1[0] = N1_init
 N2[0] = N2_init
 
+# ratio of sex of lamprey
 # interpolation of Rf from sample in collection of data in journal
 # manual input from a sample (percent males of Lake Superior, 1946-2016) 
 # from 10.1016/j.jglr.2021.09.015 and 10.1016/S0380-1330(91)71363-4
@@ -56,7 +56,7 @@ for i in range(nNodes):
     K2_tmp = K2_Init - N1_decay * N1[i] - N2_decay * N2[i] 
     #dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp)
     # now sex rate is added to the model for N1(lamprey)
-    dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp - sex_factor*Rf[i])
+    dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp - sex_factor*dRfdt[i])
     
     dN2 = r2 *N2[i]* (1 -(N2[i]+beta*N1[i])/K2_tmp)
     if(i != nNodes-1):
@@ -71,6 +71,7 @@ axs[0].set_title("1. lamprey and others competition\nr1=%.2f,r2=%.2f\nK1_Init=%.
 axs[0].set_xlabel('t')
 axs[0].plot(t+1954, N1, label="N1(Lamprey)")
 axs[0].plot(t+1954, N2, label="N2(Others)")
+axs[0].legend(loc='best')
 # axs[0].xlabel('t')
 # plt.legend(loc='best')
 # plt.show()

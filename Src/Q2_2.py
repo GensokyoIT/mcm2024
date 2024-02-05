@@ -11,7 +11,7 @@ matplotlib.use('TKAgg')
 mrr = [0, 1.0, 0.4107, 0.1071, 0.0714, 0.0178]
 
 # max population of lamprey we imagine
-MAX = 200000
+MAX = 10000
 
 female = [0] * (MAX + 1)
 male = [0] * (MAX + 1)
