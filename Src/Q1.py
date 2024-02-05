@@ -17,18 +17,19 @@ deltaT = tEnd / nNodes  # 采样间隔
 # K1, K2 will be affected by the environment, (i.e.) in relationship with N1, N2
 # we provide the initial maximum value: K1_Init, K2_Init
 # here we treat only r1 and r2 as constants
-r1 = 0.5
-r2 = 0.5
+r1 = 1
+r2 = 0.1
 K1_Init = 50
 K2_Init = 50
-alpha, beta = 0.1, 1
-sex_factor = 0
+alpha, beta = 0.1, 0.5
+sex_factor = 1
 # 初值
 N1_init, N2_init = 10, 40 
 # decay rate of K1 and K2
 N1_decay = 0.02
 N2_decay = 0.02
-
+K1 = np.linspace(50,30,nNodes) + np.random.normal(0,2,nNodes)
+K2 = np.linspace(30,50,nNodes) + np.random.normal(0,3,nNodes)
 t = np.linspace(0,tEnd,nNodes)  # (start,stop,step)
 N1 = np.zeros(nNodes)
 N2 = np.zeros(nNodes)
@@ -52,8 +53,8 @@ dRfdt = np.gradient(Rf, deltaT)
 for i in range(nNodes):
     # for K1_tmp, we can either sample data from an article 
     # or just use a single linear decreasing model w.r.t N1 and N2
-    K1_tmp = K1_Init - N1_decay * N1[i] - N2_decay * N2[i] 
-    K2_tmp = K2_Init - N1_decay * N1[i] - N2_decay * N2[i] 
+    K1_tmp = K1[i] - N1_decay * N1[i] - N2_decay * N2[i] 
+    K2_tmp = K2[i] - N1_decay * N1[i] - N2_decay * N2[i] 
     #dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp)
     # now sex rate is added to the model for N1(lamprey)
     dN1 = r1 *N1[i]* (1 -(N1[i]+alpha*N2[i])/K1_tmp - sex_factor*dRfdt[i])
