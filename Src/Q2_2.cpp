@@ -20,24 +20,36 @@ vector<double> child(MAX + 1);
 default_random_engine eng(0);
 uniform_real_distribution<double> uni(0.0, 1.0);
 
+/** check
+ * @brief check using probability model, return true if accept by female, false if reject
+ * @param fm female's length
+ * @param m male's length
+ * @return bool
+ */
 bool check(double fm, double m) {
+	// if male's length is less and equal to half of the female's length, reject
 	if (m <= fm / 2)
 		return false; // reject
+	// if male's length is greater than 1/2 female's length, accept (probability 70% to 0%, more length more probability,
+	// if male's length is at max in this case, then max probability 70%)
+	// since $1\less \frac{2m}{fm}\leq 2$
 	if (m <= fm)
 		return uni(eng) <= 0.7 * (m - fm / 2) / (fm / 2); // accept
+	// if male's length is greater than the female's length, accept (max probability 100%， min probability 70%)
+	// more length means more probability
 	if (m > fm)
-		return 0.7 + 0.3 * (m - fm) / (1.0 - fm);
+		return uni(eng) <= 0.7 + 0.3 * (m - fm) / (1.0 - fm);
 }
 
 int main() {
-
+    // initialize a group of MAX female and male's length by random;
 	for (int i = 1; i <= MAX; i++) {
 		female[i] = uni(eng);
 		male[i] = uni(eng);
 	}
 
 	mt19937 rnd(time(0));
-
+	// here i iterates male ID
 	for (int i = 1; i <= MAX; i++) {
 		int mate_count = 0;
 		while (true) {
@@ -67,15 +79,16 @@ int main() {
 					break;
 				child[i] = (female[i] + male[m]) / 2;
 			}
+			// if child is generated, then take it into account
 			if (child[i] >= 0.0) {
 				child_count++;
 				child_average += child[i];
 			}
-			//    child_average += child[ i ];
+			// child_average += child[ i ];
 		}
 	child_average /= child_count;
 
-	cout << child_count << " " << child_average;
+	cout <<"Child generated="<< child_count <<endl<< "Average length=" << child_average<<endl;
 
 	return 0;
 }

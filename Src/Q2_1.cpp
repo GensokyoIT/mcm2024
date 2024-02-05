@@ -11,8 +11,9 @@ const double mrr[6] = {0, 1.0, 0.4107, 0.1071, 0.0714, 0.0178};
 
 // max population of lamprey we imagine
 #define MAX 10000
-
+// length of female and male
 vector<double> female(MAX + 1), male(MAX + 1);
+// index for mate_list is female_ID
 vector<int> mate_list[MAX + 1];
 vector<double> child(MAX + 1);
 
@@ -20,14 +21,14 @@ int main() {
 
 	default_random_engine eng(time(0));
 	uniform_real_distribution<double> uni(0.0, 1.0);
-
+    cout<<uni(eng)<<endl;
 	for (int i = 1; i <= MAX; i++) {
 		female[i] = uni(eng);
 		male[i] = uni(eng);
 	}
 
 	mt19937 rnd(time(0));
-
+    // here i iterates male ID
 	for (int i = 1; i <= MAX; i++) {
 		int mate_count = 0;
 		while (true) {
@@ -50,6 +51,7 @@ int main() {
 		if (!mate_list[i].empty()) {
 			child_count++;
 			child[i] = 0;
+            // m is i's mates' ID
 			for (int m : mate_list[i])
 				child[i] = max(child[i], (female[i] + male[m]) / 2);
 			child_average += child[i];
