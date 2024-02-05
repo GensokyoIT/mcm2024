@@ -46,7 +46,7 @@ default_random_engine eng(0);
 uniform_real_distribution<double> uni(0.0, 1.0);
 
 mt19937 rnd(time(0));
-
+// x for female's Id, y for male's Id, c_gene for child's gene
 void give_birth(int x, int y) {
 	switch (fm_gene[x]) {
 	case 1:
@@ -64,14 +64,13 @@ void give_birth(int x, int y) {
 	case 2:
 		c_gene[x]++;
 	}
+    // if child's gene >= 1 then child has S gene, then child's length is 1.0
 	child[x] = (c_gene[x] >= 1);
 }
 
 int main() {
-
+	// initialize female and male's gene and length
 	for (int i = 1; i <= MAX; i++) {
-		//     female[i] = uni( eng );
-		//    male[i] = uni( eng );
 		fm_gene[i] = m_gene[i] = 0;
 		for (int j = 1; j <= 2; j++) {
 			fm_gene[i] += (uni(eng) <= d_rate ? 1 : 0);
@@ -80,15 +79,12 @@ int main() {
 		female[i] = (fm_gene[i] >= 1);
 		male[i] = (m_gene[i] >= 1);
 	}
-
 	for (int i = 1; i <= MAX; i++) {
 		int mate_count = 0;
 		while (true) {
-
 			mate_count++;
 			if (uni(eng) > mrr[mate_count])
 				break;
-
 			int female_id = rnd() % MAX + 1;
 			mate_list[female_id].push_back(i);
 		}
@@ -114,6 +110,7 @@ int main() {
 			child_average += child[i];
 		}
 	child_average /= child_count;
+    // new_d_rate is the sum of S gene in child S gene frequency
 	new_d_rate /= (child_count * 2);
 
 	cout << child_count << " " << child_average << endl;

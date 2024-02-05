@@ -56,8 +56,7 @@ int main() {
 			child_average += child[i];
 		}
 	child_average /= child_count;
-
-	cout << child_average;
+	cout <<"Child generated="<< child_count <<endl<< "Average length=" << child_average<<endl;
 
 	return 0;
 }
