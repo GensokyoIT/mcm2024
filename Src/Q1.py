@@ -1,14 +1,12 @@
-from scipy.integrate import odeint  # 导入 scipy.integrate 模块
 from scipy.interpolate import interp1d
-import numpy as np  # 导入 numpy包
+import numpy as np  
 import matplotlib
-import matplotlib.pyplot as plt  # 导入 matplotlib包
-# 别用Qt5, my conda env is not compatible with it
+import matplotlib.pyplot as plt 
 matplotlib.use('TKAgg')
-# 设置模型参数
-tEnd = 2016-1954  # 预测长度(63 years, 1954-2016)
-nNodes = 100000 #采样点数
-deltaT = tEnd / nNodes  # 采样间隔
+
+tEnd = 2016-1954  
+nNodes = 100000 
+deltaT = tEnd / nNodes  
 # brief: 
 # here number #1 means Lamprey, #2 means others
 # alpha is 2 to 1, that is impact of others on lamprey
