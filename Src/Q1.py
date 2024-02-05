@@ -17,7 +17,7 @@ deltaT = tEnd / nNodes  # 采样间隔
 # K1, K2 will be affected by the environment, (i.e.) in relationship with N1, N2
 # we provide the initial maximum value: K1_Init, K2_Init
 # here we treat only r1 and r2 as constants
-r1 = 2
+r1 = 0.5
 r2 = 0.5
 K1_Init = 50
 K2_Init = 50
