@@ -4,15 +4,12 @@ import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 from scipy.stats.kde import gaussian_kde
-
 matplotlib.use('TKAgg')
 # restrict the male reproduction times within 5 times
 # male reproduction rate
 mrr = [0, 1.0, 0.4107, 0.1071, 0.0714, 0.0178]
-
 # max population of lamprey we imagine
 MAX = 10000
-
 female = [0] * (MAX + 1)
 male = [0] * (MAX + 1)
 mate_list = [[] for _ in range(MAX + 1)]
@@ -21,7 +18,6 @@ child = [0] * (MAX + 1)
 random.seed(int(time.time()))
 eng = random.Random()
 uni = random.uniform
-
 def check(fm, m):
     # if male's length is less and equal to half of the female's length, reject
     if m <= fm / 2:
@@ -35,17 +31,14 @@ def check(fm, m):
     # more length means more probability
     if m > fm:
         return uni(0, 1) <= 0.7 + 0.3 * (m - fm) / (1.0 - fm)
-
 # initialize a group of MAX female and male's length by random
 for i in range(1, MAX + 1):
     female[i] = uni(0, 1)
     male[i] = uni(0, 1)
-
 # here i iterates male ID
 for i in range(1, MAX + 1):
     mate_count = 0
     while True:
-        
         mate_count += 1
         if mate_count > 5:
             break
@@ -53,7 +46,6 @@ for i in range(1, MAX + 1):
             break
         female_id = random.randint(1, MAX)
         mate_list[female_id].append(i)
-
 child_count = 0
 child_average = 0
 child_true =np.array([])
@@ -73,9 +65,7 @@ for i in range(1, MAX + 1):
             child_average += child[i]
             #append it to child_true
             child_true = np.append(child_true, child[i])
-
 child_average /= child_count
-
 print("Child generated =", child_count)
 print("Average length =", child_average)
 kde = gaussian_kde(child_true)
