@@ -2,6 +2,7 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
 #include <random>
+#include <stdio.h>
 #include <vector>
 
 using namespace std;
@@ -55,6 +56,10 @@ int main() {
 		while (true) {
 
 			mate_count++;
+			if(mate_count>5) {
+				printf("overflow!\n");
+				break;
+			}
 			if (uni(eng) > mrr[mate_count])
 				break;
 
