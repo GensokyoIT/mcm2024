@@ -6,6 +6,7 @@
 \usepackage{geometry}
 \geometry{left=1in,right=0.75in,top=1in,bottom=1in}
 \setlength{\parindent}{12pt}
+\setlength{\headheight}{15pt}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Replace ABCDEF in the next line with your chosen problem
 % and replace 1111111 with your Team Control Number
@@ -78,7 +79,7 @@
 % Replace the text from here ...
 \begin{center}
 	\textbf{\Huge Lamprey: A New Model for the Spread of an Invasive Species}
-	\begin{figure}[h]
+	\begin{figure}[ht]
 		\centering
 		\includegraphics[width=0.7\textwidth]{LampreyFigure.png}
 		\caption{Lamprey by Great Lakes Science Center\cite{sea-lamprey-2}.}
@@ -95,13 +96,13 @@ evaluate the impact of sex ratio change mechanisms on lamprey offspring. We also
 interactions between lampreys and other species to analyze the relationship between lamprey population
 development and ecosystems.
 
-In the study, we used a total of three models;\\
+In the study, we used a total of three models;
 
 \textbf{Model 1}: Lotka-Volterra model that introduced gender change factors.
 
 \textbf{Model 2}: Lamprey's body shape-first mate selection strategy and reproduction model.
 
-\textbf{Model 3}: Based on the multi-species Lotka-Volterra model Matrix iteration model. \\
+\textbf{Model 3}: Based on the multi-species Lotka-Volterra model Matrix iteration model. 
 
 We hope this study will help optimize the control of lampreys in the Great Lakes, and provide assistance i
 n studying the reproductive activities of lamprey populations.
@@ -196,7 +197,7 @@ proportion of females is affected by a reduction in food during the juvenile sta
 from a 0.5 ratio, the birth rate will decrease. Then setting the birth rate as a constant will
 be unreasonable. To correct this deviation, we have modified the coefficients of the model and
 introduced a sex ratio factor to depict the decline in birth rate.
-\begin{figure}[h]
+\begin{figure}[ht]
 	\large
 	\centering
 	$\frac{dx}{dt}=\alpha x - \beta xy$ \\
@@ -204,7 +205,7 @@ introduced a sex ratio factor to depict the decline in birth rate.
 	\caption*{Modified Lotka-Volterra predator-prey model}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\large
 	\centering
 	$\frac{dx_1}{dt}=r_1x_1(1-(\frac{x_1+\alpha_{12}x_2}{K_1})- \lambda \frac{dR_F}{dt})$\\
@@ -223,12 +224,12 @@ in the equations. However, the amount of food is positively correlated with the 
 capacity $K$, so in our formulation, we have modified the constant $K$ to be a variable that
 diminishes over time with small random changes.
 \subsubsection{Analysis and Conclusion}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Q1_LVComp.png}
 	\caption{Result from modified competitive Lotka-Volterra model}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Q1_LVPP.png}
 	\caption{Result from modified Lotka-Volterra predator-prey model}
@@ -318,7 +319,7 @@ In the model, with the change of the larval growth resources, the female proport
 further decrease, and the stronger the selection of the male will be: the smaller proportion
 of the larger size of the male will have the opportunity to reproduce the offspring, and the
 size of the offspring will also increase.
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.5\textwidth]{Q2_1.png}
 	\includegraphics[width=0.5\textwidth]{Q2_2.png}
@@ -367,12 +368,12 @@ The resource transfer matrix can describe the direct or indirect influences betw
 components of the whole ecosystem, give the ecological niche of lamprey in the ecosystem,
 and clearly reflect the material transfer and energy flow between organisms.
 \subsubsection{Model interpretation}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Q4_EnvStructure.png}
 	\caption{Resource transfer diagram}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	$\begin{pmatrix}
 			A_{11} & A_{12} & A_{13} & A_{14} & A_{15} & A_{16} \\
@@ -418,12 +419,12 @@ migratory capabilities and more pheromones. This can attract and carry more para
 which the parasites will benefit.
 
 \subsubsection{Impact on Ecosystem Stability}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Q3_divergent.png}
 	\caption{divergent model}
 \end{figure}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{Q3_nondivergence.png}
 	\caption{nondivergent model}
