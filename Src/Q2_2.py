@@ -74,7 +74,7 @@ plt.plot(x_axis, kde(x_axis))
 plt.xlabel('child length')
 # x axis unit 0.1
 plt.xticks(np.arange(0, 1.0, step=0.1))
-plt.ylabel('Probability')
+plt.ylabel('Density')
 plt.legend(loc='best')
 plt.axvline(x=child_average, color='b', linestyle='--')
 plt.text(child_average, 0.1, 'Average=%.2f'%child_average, color='r')

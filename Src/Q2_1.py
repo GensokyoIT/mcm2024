@@ -9,7 +9,7 @@ matplotlib.use('TKAgg')
 mrr = [0, 1.0, 0.4107, 0.1071, 0.0714, 0.0178]
 
 # max population of lamprey we imagine
-MAX = 100000
+MAX = 10000
 
 female = [0] * (MAX + 1)
 male = [0] * (MAX + 1)
@@ -58,10 +58,11 @@ for i in range(1, MAX + 1):
 child_average /= child_count
 # create a probability vs child's length plot, using import matplot pyplot as plt lib
 kde = gaussian_kde(child_true)
+
 x_axis = np.linspace(0,1,1001)
 plt.plot(x_axis, kde(x_axis))
 plt.xlabel('child length')
-plt.ylabel('Probability')
+plt.ylabel('Density')
 plt.xticks(np.arange(0, 1.0, step=0.1))
 
 plt.axvline(x=child_average, color='b', linestyle='--')

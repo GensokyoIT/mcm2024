@@ -46,8 +46,9 @@ fig, axs = plt.subplots(2)
 # set a medium size of the plot
 fig.set_size_inches(15, 8)
 # set a title of the plot
-axs[0].set_title('Population by year')
-axs[0].set_xlabel('t')
+#axs[0].set_title('Population by year')
+axs[0].set_xlabel('time/(year)')
+axs[0].set_ylabel('N/(Unit)')
 axs[0].plot(x_axis, pby[300:600,0], label="N0(Parasite)")
 axs[0].plot(x_axis, pby[300:600,1], label="N1(Lamprey)")
 axs[0].plot(x_axis, pby[300:600,2], label="N2(big meat-eating fish)")
