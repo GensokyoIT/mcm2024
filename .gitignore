@@ -10,3 +10,7 @@ build/
 !*.m
 !.gitignore
 !*.md
+!*.jpg
+!*.bib
+!*.png
+!*.jpeg
